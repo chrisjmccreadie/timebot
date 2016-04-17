@@ -54,6 +54,8 @@ router.post('/create/:key/:username/:password', function(req, res) {
 router.get('/details/:key', function(req, res) {
   var key = req.params.key
   //build theoutput for res
+  //note we may require more than just the key here when we go into production, I know we only every show this once when they create the account 
+  //     but full 2 auth flow is much better in this instance. 
   r.db('timebot').table('users').get(key).
     run(connection, function(err, result) 
     {
@@ -63,7 +65,7 @@ router.get('/details/:key', function(req, res) {
       if (result == null)
         res.json({status:'Error user not found'});
       else
-        res.json({key:key,balance:result.balance,taskssubmitted:result.taskssubmitted});
+        res.json({balance:result.balance,taskssubmitted:result.taskssubmitted});
   });
 
   
@@ -79,7 +81,7 @@ router.get('/about', function(req, res) {
   output = output+"<br>key = the key to auth with";
   output = output+"<br>username = username";
   output = output+"<br>password = password";
-  output = output+"<br><br>method : balance (shows the balance of a user)";
+  output = output+"<br><br>method : details (shows the balance of a user)";
   output = output+"<br>key = the key to auth with";
 
 
