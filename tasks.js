@@ -21,6 +21,10 @@ r.connect( {host: 'localhost', port: 28015,database:'timebot'}, function(err, co
 //note (chris ) this seemds odd that I require a public function, like this research the call back or the chainging of rethinkdb
 function setSubmitId(result)
 {
+	//this is the balance amount to add to the users account, this is set to one initially 
+	//note (chris) when we get to the machine learning fun then we we will set this based on the quality of the task added
+	//			   and modifiers for the reputation of the user.
+	var balanceamoount = 1;
 
 	//check the count.
 	if (result == 0)
@@ -48,6 +52,26 @@ function setSubmitId(result)
 
     	//note (Chris) if the user is not anon then update there balance if it is anon update charity balance. 
 	})
+
+	//we have to update the user balance, they gave us data they deserve.
+
+	if (submitterid != 0)
+	{
+		//this is so cool, easy to add one and if the field is not there sets it to 1.  Go nosql!!!!
+		r.db('timebot').table("users").get(submitterid).update({
+    		balance: r.row("balance").add(balanceamoount).default(1)
+		}).run(connection)
+	}
+	else
+	{
+		//they either specifed it as anon or we could not find the key either it is added to the charity balance
+		//note (chris) we may want to log the time for each of these charity additions as at some point in the future a user could come 
+		//			   in and claim a block taking the charity balance into the minus, which is no good at all. 		
+		
+		r.db('timebot').table("charity").get('f7cfcee1-b3f3-4922-b05d-54897f3b48f7').update({balance: r.row("balance").add(balanceamoount).default(1)}).run(connection);
+		
+
+	}
 }
 
 /*
