@@ -4,6 +4,26 @@ var express = require('express');
 var router = express.Router();
 var r = require('rethinkdb');
 
+var key = '';
+var amount = 0;
+
+function processPayment(result,res)
+{
+      //note (chris) (todo) pass the amount.
+      if (result.balance > amount)
+      {
+        //note (chris) (todo) make the payment
+        //note (chris) (todo) mark the payment as pendoing and only allow one cash out at a time.  Also first time / low reputation cashouts have to be 
+        //                    marked for manual release, this will be a config which can be overridden if desired.
+        res.json({status:'Account balance being sent'});
+        
+      }
+      else
+      {
+        res.json({status:'Account balance is not high enough not processed'});
+      }
+}
+
 //open a connection to the rethink database.
 var connection = null;
 r.connect( {host: 'localhost', port: 28015,database:'timebot'}, function(err, conn) {
@@ -51,6 +71,42 @@ router.post('/create/:key/:username/:password', function(req, res) {
   
 });
 
+
+
+
+/*
+*This functions settles a paymet to the bitcoin address we have on record
+*/
+
+router.get('/settle/:key/:amount', function(req,res){
+   //get the details.
+   key = req.params.key;
+   amount = req.params.amount;
+  //note we may require more than just the key here when we go into production, I know we only every show this once when they create the account 
+  //     but full 2 auth flow is much better in this instance. 
+  r.db('timebot').table('users').get(key).
+    run(connection, function(err, result) 
+    {
+      if (err) throw err;
+      console.log(result);
+      //zero result returned
+      if (result == null)
+      {
+        res.json({status:'Error user not found'});
+      }
+      else
+      {
+        processPayment(result,res);
+      }
+  });
+
+
+});
+
+
+/*
+*This function list the details for the account.
+*/
 router.get('/details/:key', function(req, res) {
   var key = req.params.key
   //build theoutput for res
