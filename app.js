@@ -10,6 +10,10 @@ app.get('/', function (req, res) {
 var tasks = require('./tasks');
 app.use('/tasks', tasks);
 
+//call in the user module
+var user = require('./user');
+app.use('/user', user);
+
 //listen for connections
 app.listen(3000, function () {
   console.log('Hello I am timebot!');

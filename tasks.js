@@ -19,6 +19,8 @@ function processAddTask(req,res)
 	//get the vars from the route
 
 	//submitter id : set to 0 for annon
+	//note (Chris) check to see if this person exists in the database and if they do add it otherwise add it as annon 
+	//note (Chris) people can come in later and claim the task if they send the new key and the one the orginially sent into this.
 	var submitterid = req.params.submitterid
 	//taskname var
 	var taskname = req.params.taskname;
@@ -30,7 +32,7 @@ function processAddTask(req,res)
 	]).run(connection, function(err, result) 
 	{
 		//oh on something done gone wrong.
-   		if (err) throw err;
+   		if (err != null)
     		console.log(JSON.stringify(result, null, 2));
 	})
 	//output it to the screen.
