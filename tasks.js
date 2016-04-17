@@ -14,12 +14,13 @@ var taskname = '';
 var connection = null;
 r.connect( {host: 'localhost', port: 28015,database:'timebot'}, function(err, conn) {
     if (err) throw err;
+    
     connection = conn;
 })
 
 
 //note (chris ) this seemds odd that I require a public function, like this research the call back or the chainging of rethinkdb
-function setSubmitId(result)
+function setSubmitId(result,res)
 {
 	//this is the balance amount to add to the users account, this is set to one initially 
 	//note (chris) when we get to the machine learning fun then we we will set this based on the quality of the task added
@@ -47,14 +48,16 @@ function setSubmitId(result)
 	]).run(connection, function(err, result) 
 	{
 		//oh on something done gone wrong.
-   		if (err != null)
+
+      	if (err) throw err;
     		console.log(JSON.stringify(result, null, 2));
 
-    	//note (Chris) if the user is not anon then update there balance if it is anon update charity balance. 
+    	//output it to the screen.
+    	var gkey = result.generated_keys[0];
+  		res.json({'status':'Added',taskkey:gkey});
 	})
 
 	//we have to update the user balance, they gave us data they deserve.
-
 	if (submitterid != 0)
 	{
 		//this is so cool, easy to add one and if the field is not there sets it to 1.  Go nosql!!!!
@@ -62,7 +65,11 @@ function setSubmitId(result)
 			//note (chris) use balance amount here when we get round to it.
     		balance: r.row("balance").add(1).default(1),
     		taskssubmitted: r.row("taskssubmitted").add(1).default(1)
-		}).run(connection)
+		}).run(connection);
+
+
+		//if user not found set the sumbitterid to 0 and set the claimid to the id submitted.
+		
 	}
 	else
 	{
@@ -99,13 +106,10 @@ function processAddTask(req,res)
 		//note (Chris) I am calling an external function because I could not get access to the req function in this var, it seems very odd
 		//			   this would be the case I am surely doing something wrong here. I will refactor this later when I have more knowledge
 		//			   of how Node.js does this kind of thing.
-		setSubmitId(result);
+		setSubmitId(result,res);
 
 	});
 
-	//if user not found set the sumbitterid to 0 and set the claimid to the id submitted.
-	//output it to the screen.
-  	res.send('Task Name:'+taskname);
 }
 
 

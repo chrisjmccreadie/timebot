@@ -1,9 +1,21 @@
+/*
+*Main todos
+*
+* User update, delete
+* payment send method
+* reputaiton scores logged for each user
+* add user type 
+* associate users to a group for group reputations and further clarafication.
+*
+*/
+
 
 //include all the things
 var express = require('express');
 var router = express.Router();
 var r = require('rethinkdb');
 
+//note (chris) when I figure out how to pass vars to callbacks this will not be required.
 var key = '';
 var amount = 0;
 
@@ -51,7 +63,9 @@ router.post('/create/:key/:username/:password', function(req, res) {
   ]).run(connection, function(err, result) 
   {
       //error
-      if (err != null) 
+      if (err) throw err;
+      
+      if (result == null) 
       {
         console.log(err);
         console.log(JSON.stringify(result, null, 2));
