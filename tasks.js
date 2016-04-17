@@ -53,8 +53,13 @@ function setSubmitId(result,res)
     		console.log(JSON.stringify(result, null, 2));
 
     	//output it to the screen.
-    	var gkey = result.generated_keys[0];
-  		res.json({'status':'Added',taskkey:gkey});
+    	var taskid = result.generated_keys[0];
+    	//return the task id.  So they user can come and retiever it later.  This could be useful if you wanted to do things such as
+    	//					   Allow the user maintain ip / copyright on the task submitted 
+    	//					   Allow the user to delete it, you would have to factor in the payment part here, payment should at the very least give a read only on the task forever for timebot
+    	//					   Allow the user to see how many times it has been used and how inflenutial this commit has been to the overall knowledge pool
+    	//					   Allow the user to specify in which context the task is allowed to be user "open source queries only" for instance. 	 
+  		res.json({'status':'Added',taskid:taskid});
 	})
 
 	//we have to update the user balance, they gave us data they deserve.
