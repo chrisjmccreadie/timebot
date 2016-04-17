@@ -74,11 +74,15 @@ router.get('/balance/:key', function(req, res) {
 router.get('/about', function(req, res) {
   //build theoutput for res
   var output = "User tasks";
-  output = output+"<br>method : create";
+  output = output+"<br>method : create (creates a user)";
   output = output+"<br>parmaters:";
-  output = output+"<br>key = the key to auth witj";
+  output = output+"<br>key = the key to auth with";
   output = output+"<br>username = username";
   output = output+"<br>password = password";
+  output = output+"<br><br>method : balance (shows the balance of a user)";
+  output = output+"<br>key = the key to auth with";
+
+
 
   //output it.
   res.send(output);
