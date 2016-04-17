@@ -11,17 +11,22 @@ r.connect( {host: 'localhost', port: 28015,database:'timebot'}, function(err, co
     connection = conn;
 })
 
-
-// define the  add task route
-router.get('/add/:taskname', function(req, res) {
-
+/*
+* This function processes the add task 
+*/
+function processAddTask(req,res)
+{
 	//get the vars from the route
+
+	//submitter id : set to 0 for annon
+	var submitterid = req.params.submitterid
 	//taskname var
 	var taskname = req.params.taskname;
   	//add a record based on the names
   	//note (chris) make this check the min paramaters are in place. 
   	r.db('timebot').table('tasks').insert([
-    	   { name: taskname}
+    	   { name: taskname,submitterid: submitterid}
+    	  
 	]).run(connection, function(err, result) 
 	{
 		//oh on something done gone wrong.
@@ -30,9 +35,17 @@ router.get('/add/:taskname', function(req, res) {
 	})
 	//output it to the screen.
   	res.send('Task Name:'+taskname);
+}
 
 
+// define the  add task route
+router.get('/add/:submitterid/:taskname', function(req, res) {
+	processAddTask(req,res);
+});
 
+// define the  add task route
+router.post('/add/:submitterid/:taskname', function(req, res) {
+	processAddTask(req,res);
 });
 // define the about route
 router.get('/about', function(req, res) {
