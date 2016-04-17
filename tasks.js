@@ -3,6 +3,12 @@
 var express = require('express');
 var router = express.Router();
 var r = require('rethinkdb');
+//note (chris) there is no requirement for these to be global.
+var submitterid = 0;
+var submiterclaimid = 0;
+var taskname = '';
+
+
 
 //open a connection to the rethink database.
 var connection = null;
@@ -11,23 +17,28 @@ r.connect( {host: 'localhost', port: 28015,database:'timebot'}, function(err, co
     connection = conn;
 })
 
-/*
-* This function processes the add task 
-*/
-function processAddTask(req,res)
-{
-	//get the vars from the route
 
-	//submitter id : set to 0 for annon
-	//note (Chris) check to see if this person exists in the database and if they do add it otherwise add it as annon 
-	//note (Chris) people can come in later and claim the task if they send the new key and the one the orginially sent into this.
-	var submitterid = req.params.submitterid
-	//taskname var
-	var taskname = req.params.taskname;
-  	//add a record based on the names
+//note (chris ) this seemds odd that I require a public function, like this research the call back or the chainging of rethinkdb
+function setSubmitId(result)
+{
+
+	//check the count.
+	if (result == 0)
+	{
+		submiterclaimid = submitterid;
+		submitterid = 0;
+
+	}
+	else
+	{
+		submiterclaimid =0;
+	}
+
+
+	//add a record based on the names
   	//note (chris) make this check the min paramaters are in place. 
   	r.db('timebot').table('tasks').insert([
-    	   { name: taskname,submitterid: submitterid}
+    	   { name: taskname,submitterid: submitterid,submiterclaimid:submiterclaimid}
     	  
 	]).run(connection, function(err, result) 
 	{
@@ -37,12 +48,43 @@ function processAddTask(req,res)
 
     	//note (Chris) if the user is not anon then update there balance if it is anon update charity balance. 
 	})
+}
+
+/*
+* This function processes the add task 
+*/
+function processAddTask(req,res)
+{
+	//get the vars from the route
+
+	//submitter id : set to 0 for annon
+	// check to see if this person exists in the database and if they do add it otherwise add it as annon 
+	submitterid = req.params.submitterid;
+	//set the sumbmitter claim id to 0;
+	//taskname var
+	taskname = req.params.taskname;
+	//find the user, count to see of he exists.
+	//note (chris) we can chain the following right > update his balance if he is here
+	r.db('timebot').table('users').filter(r.row('id').eq(submitterid)).count().
+    run(connection, function(err, result) 
+    {
+	    if (err) throw err;
+		
+		//note (Chris) I am calling an external function because I could not get access to the req function in this var, it seems very odd
+		//			   this would be the case I am surely doing something wrong here. I will refactor this later when I have more knowledge
+		//			   of how Node.js does this kind of thing.
+		setSubmitId(result);
+
+	});
+
+	//if user not found set the sumbitterid to 0 and set the claimid to the id submitted.
 	//output it to the screen.
   	res.send('Task Name:'+taskname);
 }
 
 
 // define the  add task route
+// note (chris) we could link these routes together instead of having the get and post toghether, research how.
 router.get('/add/:submitterid/:taskname', function(req, res) {
 	processAddTask(req,res);
 });
