@@ -34,6 +34,8 @@ function processAddTask(req,res)
 		//oh on something done gone wrong.
    		if (err != null)
     		console.log(JSON.stringify(result, null, 2));
+
+    	//note (Chris) if the user is not anon then update there balance if it is anon update charity balance. 
 	})
 	//output it to the screen.
   	res.send('Task Name:'+taskname);
