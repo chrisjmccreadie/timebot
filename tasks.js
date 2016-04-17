@@ -24,7 +24,7 @@ function setSubmitId(result)
 	//this is the balance amount to add to the users account, this is set to one initially 
 	//note (chris) when we get to the machine learning fun then we we will set this based on the quality of the task added
 	//			   and modifiers for the reputation of the user.
-	var balanceamoount = 1;
+	var balanceamount = 1;
 
 	//check the count.
 	if (result == 0)
@@ -59,7 +59,7 @@ function setSubmitId(result)
 	{
 		//this is so cool, easy to add one and if the field is not there sets it to 1.  Go nosql!!!!
 		r.db('timebot').table("users").get(submitterid).update({
-    		balance: r.row("balance").add(balanceamoount).default(1)
+    		balance: r.row("balance").add(balanceamount).default(1)
 		}).run(connection)
 	}
 	else

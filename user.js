@@ -51,6 +51,24 @@ router.post('/create/:key/:username/:password', function(req, res) {
   
 });
 
+router.get('/balance/:key', function(req, res) {
+  var key = req.params.key
+  //build theoutput for res
+  r.db('timebot').table('users').get(key).
+    run(connection, function(err, result) 
+    {
+      if (err) throw err;
+
+      //zero result returned
+      if (result == null)
+        res.json({status:'Error user not found'});
+      else
+        res.json({key:key,balance:result.balance});
+  });
+
+  
+});
+
 
 // define the about route
 router.get('/about', function(req, res) {
