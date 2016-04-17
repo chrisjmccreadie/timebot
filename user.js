@@ -63,12 +63,15 @@ router.post('/create/:key/:username/:password', function(req, res) {
   ]).run(connection, function(err, result) 
   {
       //error
-      if (err) throw err;
+      if (err) throw err
+
       
       if (result == null) 
       {
-        console.log(err);
-        console.log(JSON.stringify(result, null, 2));
+        //console.log(err);
+        //console.log(JSON.stringify(result, null, 2));
+        res.json({'status':'Unknown error creating user' });
+
 
       }
       else
@@ -102,7 +105,6 @@ router.get('/settle/:key/:amount', function(req,res){
     run(connection, function(err, result) 
     {
       if (err) throw err;
-      console.log(result);
       //zero result returned
       if (result == null)
       {
@@ -110,6 +112,7 @@ router.get('/settle/:key/:amount', function(req,res){
       }
       else
       {
+        //process the payment
         processPayment(result,res);
       }
   });
