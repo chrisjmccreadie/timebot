@@ -51,7 +51,7 @@ router.post('/create/:key/:username/:password', function(req, res) {
   
 });
 
-router.get('/balance/:key', function(req, res) {
+router.get('/details/:key', function(req, res) {
   var key = req.params.key
   //build theoutput for res
   r.db('timebot').table('users').get(key).
@@ -63,7 +63,7 @@ router.get('/balance/:key', function(req, res) {
       if (result == null)
         res.json({status:'Error user not found'});
       else
-        res.json({key:key,balance:result.balance});
+        res.json({key:key,balance:result.balance,taskssubmitted:result.taskssubmitted});
   });
 
   

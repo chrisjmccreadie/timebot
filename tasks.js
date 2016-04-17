@@ -59,7 +59,9 @@ function setSubmitId(result)
 	{
 		//this is so cool, easy to add one and if the field is not there sets it to 1.  Go nosql!!!!
 		r.db('timebot').table("users").get(submitterid).update({
-    		balance: r.row("balance").add(balanceamount).default(1)
+			//note (chris) use balance amount here when we get round to it.
+    		balance: r.row("balance").add(1).default(1),
+    		taskssubmitted: r.row("taskssubmitted").add(1).default(1)
 		}).run(connection)
 	}
 	else
@@ -68,7 +70,7 @@ function setSubmitId(result)
 		//note (chris) we may want to log the time for each of these charity additions as at some point in the future a user could come 
 		//			   in and claim a block taking the charity balance into the minus, which is no good at all. 		
 		
-		r.db('timebot').table("charity").get('f7cfcee1-b3f3-4922-b05d-54897f3b48f7').update({balance: r.row("balance").add(balanceamoount).default(1)}).run(connection);
+		r.db('timebot').table("charity").get('f7cfcee1-b3f3-4922-b05d-54897f3b48f7').update({balance: r.row("balance").add(1).default(1)}).run(connection);
 		
 
 	}
