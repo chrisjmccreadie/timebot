@@ -1,6 +1,8 @@
 var express = require('express');
 //load the config file.
 var nconf = require('nconf');
+//load the bitcoin class
+var bitcoin = require('bitcoinjs-lib');
 var app = express();
 // First consider commandline arguments and environment variables, respectively.
 nconf.argv().env();
@@ -14,8 +16,12 @@ nconf.defaults({
 });
 
 
+//bitcoing usage 
+//var keyPair = bitcoin.ECPair.makeRandom();
+//console.log(keyPair.toWIF());
+
 app.get('/', function (req, res) {
-  res.send('Hello World I am time bot');
+  res.send('I knows tasls and users, please use them');
 });
 
 
