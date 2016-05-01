@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "accept-bitcoin": "^0.0.9",
     "bitcoinjs-lib": "^2.2.0",
     "express": "^4.13.4",
     "nconf": "^0.8.4"

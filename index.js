@@ -1,9 +1,11 @@
+//load the express framework.
 var express = require('express');
 //load the config file.
 var nconf = require('nconf');
-//load the bitcoin class
-var bitcoin = require('bitcoinjs-lib');
+//load express
 var app = express();
+//note (Chris) when this is includes in the routs it picks up the port etc, this appears to be 
+//persistent, look into the nconf class and see how this is happening.
 // First consider commandline arguments and environment variables, respectively.
 nconf.argv().env();
 // Then load configuration from a designated file.
@@ -15,15 +17,14 @@ nconf.defaults({
     }
 });
 
-
-//bitcoing usage 
-//var keyPair = bitcoin.ECPair.makeRandom();
-//console.log(keyPair.toWIF());
-
+//standard app function.
 app.get('/', function (req, res) {
-  res.send('I knows tasls and users, please use them');
+  res.send('I knows tasks and users, please use them');
 });
 
+//call in the bitcoin module
+var bitcoin = require('./bitcoin');
+app.use('/bitcoin', bitcoin);
 
 //call in the tasks module
 var tasks = require('./tasks');
@@ -36,4 +37,7 @@ app.use('/user', user);
 //listen for connections
 app.listen(nconf.get('http:port'), function () {
   console.log('Hello I am timebot!');
+
+
+  
 });

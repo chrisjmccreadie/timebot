@@ -110,6 +110,11 @@ function processAddTask(req,res)
 
 }
 
+router.delete('/:submitterid/:taskid', function(req,res) {
+	//Note (Chris) add the delete function. 
+	res.send("yay");
+});
+
 
 // define the  add task route
 // note (chris) we could link these routes together instead of having the get and post toghether, research how.
@@ -121,6 +126,12 @@ router.get('/:submitterid/:taskname', function(req, res) {
 router.post('/:submitterid/:taskname', function(req, res) {
 	processAddTask(req,res);
 });
+
+// define the  add task route
+router.put('/:submitterid/:taskname', function(req, res) {
+	processAddTask(req,res);
+});
+
 // define the about route
 router.get('/about', function(req, res) {
   //build theoutput for res
