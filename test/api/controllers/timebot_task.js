@@ -90,23 +90,3 @@ describe('controllers', function() {
   });
 
 });
-
-/*
-it('should return a error string', function(done) {
-
-          request(server)
-            .get('/task')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(400)
-            .end(function(err, res) {
-              should.not.exist(err);
-              //console.log(res.clientError);
-              //console.log('dddd');
-              //console.log(res);
-              //if (err) return done(err);
-              //res.body.clientError.should.eql("true");
-              done();
-            });
-        });
-        */
