@@ -26,6 +26,7 @@ var util = require('util');
  */
 module.exports = {
   taskput: taskput,
+  taskget: taskget
 };
 
 /*
@@ -35,9 +36,37 @@ module.exports = {
   Param 2: a handle to the response object
  */
 
+
+/*
+* This function takes a put request and stores the task.
+*/
 function taskput(req, res) {
-  // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
-  //console.log(res);
-  console.log(req.swagger.params.name.value);
-  res.json(req.swagger.params);
+  //var taskname = req.swagger.params.name.value;
+  //set an error variable.
+  var error = 0;
+  //check the error. 
+  if (error == 0)
+  {
+    //display the success
+    res.json({message:"pmessage",taskid:"taskid"});
+  }
+  else
+  {
+    //display the error
+    res.statusCode = 400;
+    res.json(res.error);
+
+  }
 }
+
+function taskget(req,res)
+{
+  //res.statusCode = 200;
+  //console.log(req.swagger.params);
+  //res.json(res.error);
+  res.json({message:"pmessage"});
+}
+
+
+
+
