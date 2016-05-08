@@ -21,16 +21,21 @@ paths:
   /task:
     # binds a127 app logic to a route
     x-swagger-router-controller: timebot_task
-    get:
+    put:
       description: Returns 'Add Task' to the caller
       # used as the method name of the controller
-      operationId: task
+      operationId: taskput
       parameters:
         - name: name
-          in: query
+          in: header
           description: The name of the person to whom to say hello
-          required: false
+          required: true
           type: string
+        - name: address
+          in: header
+          description: The name of the person to whom to say hello
+          required: true
+          type: string        
       responses:
         "200":
           description: Success
@@ -41,20 +46,20 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"
-  /hello:
+            $ref: "#/definitions/ErrorResponse"   
+  /task{id}:
     # binds a127 app logic to a route
     x-swagger-router-controller: timebot_task
     get:
       description: Returns 'Add Task' to the caller
       # used as the method name of the controller
-      operationId: hello
+      operationId: taskpost
       parameters:
-        - name: name
-          in: query
+        - name: id
+          in: path
           description: The name of the person to whom to say hello
-          required: false
-          type: string
+          required: true
+          type: integer
       responses:
         "200":
           description: Success
@@ -65,20 +70,16 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            $ref: "#/definitions/ErrorResponse"             
   /swagger:
     x-swagger-pipe: swagger_raw   
 # complex objects have schema definitions
 definitions:
   TaskGetResponse:
-    required:
-      - message
     properties:
       message:
         type: string
   ErrorResponse:
-    required:
-      - message
     properties:
       message:
         type: string
